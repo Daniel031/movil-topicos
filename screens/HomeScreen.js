@@ -21,7 +21,7 @@ export default function HomeScreen({navigation}){
     <Text style={styles.textButton}>Iniciar Sesion</Text>
     </Pressable>
                 <View style={styles.loginLinkContainer}>
-                    <Text style={styles.textContainer} >No tienes una cuenta?</Text>
+                    <Text style={styles.textContainer} >No tienes una cuenta?,</Text>
                     <Pressable onPress={()=>{navigation.navigate('SignUp')}} 
                             style={({ pressed }) => [
                                     {

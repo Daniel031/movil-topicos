@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View ,Text} from 'react-native';
 
-export default function LoginScreen(){
+export default function HomeUserScreen(){
     return (
         <View>
-            <Text>Login Screen </Text>
+            <Text>Home User Screen </Text>
         </View>
     );
 }
