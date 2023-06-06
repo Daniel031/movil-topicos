@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View ,Text} from 'react-native';
 
-export default function HomeUserScreen(){
+export default function UserProfile({navigation}){
     return (
         <View>
-            <Text>Home User Screen </Text>
+            <Text>User profile</Text>
         </View>
     );
 }

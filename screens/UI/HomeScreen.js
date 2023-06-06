@@ -1,38 +1,19 @@
 import * as React from 'react';
 import { View ,Image,Text, Button, StyleSheet, Pressable} from 'react-native';
+import ButtonComponent from '../components/Button.component'
+import HiperLinkComponent from '../components/Hiperlink.component';
 
 export default function HomeScreen({navigation}){
     return (
         <View style={styles.mainContainer}>
             <View style={styles.imageContainer} >
-                <Image source={require('./../assets/images/park.png')} />
+                <Image source={require('./../../assets/images/park.png')} />
             </View>
             <View style={styles.routeContainer}>
-                <Pressable onPress={()=>{navigation.navigate('Login')}} 
-    style={({ pressed }) => [
-        styles.buttonContainer,
-        {
-          backgroundColor: pressed
-            ? `#006400`
-            : 'green'
-        },
-        
-      ]}>
-    <Text style={styles.textButton}>Iniciar Sesion</Text>
-    </Pressable>
+               <ButtonComponent onPress={()=>{navigation.navigate("Iniciar Sesion")}} fontColor="white" text="Iniciar Sesion"/>
                 <View style={styles.loginLinkContainer}>
                     <Text style={styles.textContainer} >No tienes una cuenta?,</Text>
-                    <Pressable onPress={()=>{navigation.navigate('SignUp')}} 
-                            style={({ pressed }) => [
-                                    {
-                                        backgroundColor:pressed?'rgba(52, 52, 52, 0.2)':'rgba(52, 52, 52, 0.0)'
-                                    },
-                    ]}>
-                        <Text style={styles.hiperLinkContainer}>
-                            Registrate
-                        </Text>
-                    </Pressable> 
-
+                     <HiperLinkComponent onPress={()=>{navigation.navigate("Registrate")}} textLink=" registrate"/>
                 </View>
             </View>
         </View>
