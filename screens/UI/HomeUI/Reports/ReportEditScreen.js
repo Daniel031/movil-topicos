@@ -49,4 +49,4 @@ export default function ReportEditScreen({route,navigation}){
     );
 }
  
-const typeReport = ["Alcantarillado","Alumbrado publico"];
+const typeReport = ["aseo urbano", "vias publicas", "alumbrado publico", "alcantarillado", "areas verdes"];

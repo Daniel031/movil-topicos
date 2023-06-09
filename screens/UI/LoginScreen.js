@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { View, Text, StyleSheet, ToastAndroid } from 'react-native';
+import { View, Text, StyleSheet, ToastAndroid, Alert } from 'react-native';
 import { CheckBox, Dialog } from '@rneui/base';
 import ButtonComponent from '../components/Button.component';
 import FormField from '../components/FormField.component';
@@ -15,6 +15,8 @@ export default function LoginScreen({navigation}){
     const [dialogState,setDialogState] = useState(false);
     const [error,setError] = useState(false);
     const [errorQuery,setErrorQuery] = useState(false);
+    const [ userBlock, setUserBlock ] = useState(false);
+
     const onPress = () => {
 
         if (!error) {
@@ -25,6 +27,9 @@ export default function LoginScreen({navigation}){
                 stateError = !response.res;
                 if (!stateError){
                     navigation.navigate('HomeUser');
+                }else{
+                    if(response)
+                    ToastAndroid.show(`${response.mensaje}`,ToastAndroid.SHORT);
                 }
                 setErrorQuery(stateError);
                }

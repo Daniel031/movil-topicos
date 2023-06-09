@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { View, Text, Image, StyleSheet} from 'react-native';
+import { View, Text, Image, StyleSheet, ToastAndroid} from 'react-native';
 import { Button, Dialog } from '@rneui/base';
 import { useState } from 'react';
+import Report from '../../../../routes/Report.route';
+import ReportService from '../../../../services/Report';
 export default function ReportShowScreen({route,navigation}){
 // const { a, b, c, d } = route.params;
     const [messageDestroy, setMessageDestroyE ] = useState(false);
     const [destroyE, setDestroyE ] = useState(false);
-
+    const [ dialog, setDialogState ] = useState(false);
     const destroyElement = ()=>{
         setDestroyE(true);
     }
@@ -14,8 +16,30 @@ export default function ReportShowScreen({route,navigation}){
         setDestroyE(false);
     }
     const confirmDestroy = () => {
-        //Logica para destruir el elemento y redireccionar al menu
         setDestroyE(false);
+        setDialogState(true);
+        ReportService.destroyReport(route.params.id).then(
+            (value) => {
+                let bandera = false;
+                if (value){
+                    if (value.res){
+                        bandera = true;
+                        ToastAndroid.show('Se elimino de manera satisfactoria',ToastAndroid.SHORT);
+                        navigation.navigate('HistoryScreen');
+                    }
+                }
+                if (!bandera)
+                    ToastAndroid.show('No se pudo eliminar la denuncia',ToastAndroid.SHORT);
+            }
+        ).catch(
+            (error) =>{
+                ToastAndroid.show('No se pudo eliminar la denuncia',ToastAndroid.SHORT);
+            }
+        ).finally(
+            ()=>{
+                setDialogState(false);
+            }
+        );
     }
 
     return (
@@ -59,27 +83,30 @@ export default function ReportShowScreen({route,navigation}){
               </View>
               }   
               <View>
-                <Text style={styles.title} >Titulo #1</Text>
+                <Text style={styles.title} >{route.params.titulo}</Text>
               </View>
               <View>
                 <Text style={styles.titleFields}>Tipo de denuncia</Text>
-                <Text style={styles.description}> XXXXccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc  </Text>
+                <Text style={styles.description}> {typeReport[route.params.tipo_denuncia-1]} </Text>
               </View>
               <View>
                 <Text style={styles.titleFields}>Descripcion</Text>
-                <Text style={styles.description} >YYYYwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww</Text>
+                <Text style={styles.description} >{route.params.descripcion}</Text>
               </View>
               <View>
                 <Text style={styles.titleFields}>Fecha de envio</Text>
-                <Text style={styles.description} >ZZZZZwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww</Text>
+                <Text style={styles.description} >{route.params.fecha}</Text>
               </View>
               <View>
                 <Text style={styles.titleFields}>Estado</Text>
-                <Text style={styles.state}>WWWW</Text>
+                <Text style={[styles.description,route.params.estado==1?styles.stateProcess:styles.stateAproved]}>{route.params.estado==1?"En proceso":"Aprobado"}</Text>
               </View>
               <View>
                 <Image style={[{height:100,width:100}]}/>
               </View>
+              { dialog && <Dialog overlayStyle={{backgroundColor:'white'}} isVisible={true} >
+                   <Dialog.Loading />
+              </Dialog>}
             </View>
         </View>
     );
@@ -114,15 +141,19 @@ const styles = new StyleSheet.create({
         fontWeight:'bold'
     },
     titleFields: {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontSize: 20
     },
     description: {
-        color: 'grey'
+        color: 'grey',
+        fontSize: 18
     },
-    state: {
+    stateProcess: {
+        color: 'darkorange'
+    },
+    stateAproved: {
         color: 'green'
-    },
-    photos: {
-
     }
 });
+
+const typeReport = ["aseo urbano", "vias publicas", "alumbrado publico", "alcantarillado", "areas verdes"];

@@ -58,9 +58,8 @@ export default function SignUpScreenCamera({navigation}){
       Authentication.beforeSignUpImage(codeCI,photoUri).then(res => {
         if (res.res){
           navigation.navigate('RegisterData',res.datos);
-          //Alert.alert('datos',JSON.stringify(res.datos));
         }else{
-          Alert.alert('Usuario no encontrado','No se encontro en la base de datos');
+          Alert.alert('Usuario no encontrado',`No se encontro en la base de datos ${JSON.stringify(res)}`);
         }
       })
       .catch(error => {

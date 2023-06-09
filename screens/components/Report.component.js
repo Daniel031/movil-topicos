@@ -74,7 +74,7 @@ const ReportComponent = props => {
                 { !(photos.length >= 2)  && <ButtonPlusComponent onPress={pickImage}/>}
             </View>
             <View>
-              <ButtonComponent disabled={props.isDisabled()} onPress={props.onPress} text={props.buttonTitle} fontColor="white" />
+              <ButtonComponent onPress={props.onPress} text={props.buttonTitle} fontColor="white" />
             </View>
         </View>
     );

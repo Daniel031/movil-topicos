@@ -4,6 +4,7 @@ import ReportComponent from '../../../components/Report.component';
 import { useState, useEffect } from 'react';
 import * as Location from 'expo-location';
 import ReportService from '../../../../services/Report';
+import { Dialog } from '@rneui/base';
 
 export default function ReportCreateScreen({route,navigation}){
     const [codeTypeReport,setCodeTypeReport] = useState(0);
@@ -12,6 +13,7 @@ export default function ReportCreateScreen({route,navigation}){
     const [photosGallery,setPhotosGallery] = useState([]);
     const [ longitude, setLongitude ] = useState(0);
     const [ latitude, setLatitude ] = useState(0);
+    const [ dialogState, setDialogState ] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -51,22 +53,36 @@ export default function ReportCreateScreen({route,navigation}){
         } else {
         let imagenes = [];
         photosGallery.map((photo)=>{
-            imagenes.push(photo);
+            imagenes.push(photo.uri);
         })
-        ReportService.saveReport(titleInput,descripcionText,latitude,longitude,imagenes,typeReport)
+        setDialogState(true);
+        ReportService.saveReport(titleInput,descripcionText,latitude,longitude,imagenes,codeTypeReport)
         .then((value) => {
-            Alert.alert('s',`${value}`);
+            if (value){
+                if (value.res){
+                    ToastAndroid.show('Se creo satisfactoriamente la denuncia',ToastAndroid.SHORT);
+                    navigation.navigate('Historial');
+                }else{
+                    ToastAndroid.show('La imagen no esta acorde a lo enviado',ToastAndroid.SHORT);
+                }
+            }
+            
+            
         })
         .catch(
             (error) => {
-                Alert.alert('s',`${error}`);
+                ToastAndroid.show('Hubo un error con la transaccion',ToastAndroid.SHORT);
+            }
+        ).finally(
+            () => {
+                setDialogState(false);
             }
         );
-        navigation.navigate('Historial');
+
         }
     }
     const isDisabled = () => {
-        return !(photosGallery.length>0 && descripcionText.length >64 && titleInput.length>0);
+        return !(descripcionText.length >64 && titleInput.length>0 && photosGallery.length>0);
     }
 
     const numberLines = (<Text style={{textAlign:'right'}} >{`${descripcionText.length}/512`}</Text>);
@@ -84,9 +100,13 @@ export default function ReportCreateScreen({route,navigation}){
                             onUpdateGallery={updatePhotoGallery}
                             numberLines={numberLines}
                             onPress={sendReport}
-                            isDisabled={isDisabled}
                             updateLongitude={updateLongitude}
                             />
+            { dialogState &&
+            <Dialog overlayStyle={{backgroundColor:'white'}} isVisible={true} >
+                   <Dialog.Loading />
+            </Dialog>
+            }
         </View>
     );
 }

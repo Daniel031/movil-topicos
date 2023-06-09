@@ -1,21 +1,60 @@
 import * as React from 'react';
-import { View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet, Alert, ToastAndroid} from 'react-native';
 import ButtonSelectComponent from '../../components/ButtonSelect.component';
 import { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { ScrollView } from 'react-native';
 import HistoryStateComponent from '../../components/HistoryState.component';
+import { Dialog } from '@rneui/base';
+import { useEffect } from 'react';
+import ReportService from '../../../services/Report';
+import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function HistoryScreen({navigation}){
 
-
+    const isFocused = useIsFocused();
     const [ isAll, setIsAll ] = useState(true);
-    const [ isRecived, setRecived ] = useState(false);
+    const [ isRecived, setRecived ] = useState(true);
     const [ isDiscarted, setDescarted ] = useState(false);
     const [ isInWait, setInWait ] = useState(false);
     const [ selectDate, setSelectDate ] = useState(0);
     const [ selectType, setSelectType ] = useState(0);
+    const [ dialogState, setDialogState ] = useState(false);
+    const [ messageNotReport, setmessageNotReport ] = useState(false);
+    const [ reportse , setReports] = useState([]);
+    const [ histories, setHistories ] = useState([]);
 
+    useEffect(() =>{
+        if (isFocused){
+            obtainReports();
+        }
+    },[isFocused]);
+
+    useFocusEffect(() => {
+     
+    });
+
+    const obtainReports = ()=>{
+        setDialogState(false);
+        ReportService.getReports().then((value) => {
+            if (value){
+                if (value.res) {
+                    setHistories(value.data);
+                    charginReports();
+                } else {
+                    setmessageNotReport(true);
+                }
+                
+            }
+        }).catch(() => {
+            setmessageNotReport(true);
+            
+        }).finally(() => {
+            setDialogState(true);
+        });
+    };
+ 
     const offAll = () => {
         setIsAll(false);
         setDescarted(false);
@@ -23,22 +62,62 @@ export default function HistoryScreen({navigation}){
         setRecived(false);
     };
 
-    const reports = [];
-    if (histories){
-        for (let i = 0; i < histories.length; i++) {
-            reports.push(
-                <HistoryStateComponent key={i} keyVal={`${i}`} onPress={()=>{navigation.navigate('ShowReport',histories[i])}} style={styles.history} title={histories[i].title} description = {histories[i].description} source={require('./../../../assets/images/park.png')} state={histories[i].state} date={histories[i].fecha} />
-            )
+    const charginReports = () => {
+        const reports = [];
+        if (histories){
+            for (let i = 0; i < histories.length; i++) { 
+                reports.push(
+                    <HistoryStateComponent key={i} keyVal={`${i}`} onPress={()=>{navigation.navigate('ShowReport',histories[i])}} style={styles.history} title={histories[i].titulo} description = {histories[i].descripcion} source={{uri:histories[i].imagen1}} state={states.at(histories[i].estado)} date={histories[i].fecha} />
+                )
+            }
         }
+        setReports([...reports]);
+    };
+    
+    const charginReportsFilter = () => {
+        const reports = [];
+        if (histories){
+            for (let i = 0; i < histories.length; i++) { 
+                reports.push(
+                    <HistoryStateComponent key={i} keyVal={`${i}`} onPress={()=>{navigation.navigate('ShowReport',histories[i])}} style={styles.history} title={histories[i].titulo} description = {histories[i].descripcion} source={{uri:histories[i].imagen1}} state={states.at(histories[i].estado)} date={histories[i].fecha} />
+                )
+            }
+        }
+        setReports([...reports]);
+    };
+
+    let items = [];
+    for (let i = 0; i < typeReport.length; i++) {
+        items.push(
+          <Picker.Item key={typeReport[i]} style={styles.pickerItem} label={typeReport[i]} value={i+1}/>
+        );
+        
     }
 
+    const aplyingFilters = () => {
+        setDialogState(false);
+        ReportService.getReportsFilter(selectDate,selectType,isRecived?2:1).then((value) => {
+            if (value){
+                if (value.res) {
+                    setHistories(value.datos);
+                    charginReportsFilter();
+                } else {
+                    setmessageNotReport(true);
+                }
+                
+            }
+        }).catch(() => {
+            setmessageNotReport(true);
+            
+        }).finally(() => {
+            setDialogState(true);
+        });
+    }
+    
     return (
         <View style={ styles.screenComplete }>
           <View style={styles.filterOptionsButton}>
-            <ButtonSelectComponent onPress={()=>{ offAll(); setIsAll(true);}} stateButton={isAll} text="Todas" />
-            <ButtonSelectComponent onPress={()=>{ offAll(); setRecived(true);}} stateButton={isRecived} text="Aceptadas" />
-            <ButtonSelectComponent onPress={()=>{ offAll(); setInWait(true);}} stateButton={isInWait} text="En proceso" />
-            <ButtonSelectComponent onPress={()=>{ offAll(); setDescarted(true);}} stateButton={isDiscarted} text="Rechazadas" />
+            <ButtonSelectComponent onPress={()=>{ obtainReports() }} stateButton={isRecived} text="Actualizar" />
           </View>
           <View style={styles.picker}>
             <View style={styles.pickerBoxes}>
@@ -49,14 +128,15 @@ export default function HistoryScreen({navigation}){
             </View>
             <View style={styles.pickerBoxes} >
             <Picker style={styles.pickerStyle} selectedValue={selectType}   onValueChange={(itemValue, itemIndex) =>setSelectType(itemValue)}>
-                <Picker.Item style={styles.pickerItem} label='Alcantarillado' value={0}/>
-                <Picker.Item style={styles.pickerItem} label='Iluminacion' value={1} />
+                {items}
             </Picker> 
             </View>
           </View>
           <View style={styles.historyTab} >
             <ScrollView>
-                {reports}
+                {dialogState && !messageNotReport && reportse}
+                {!dialogState && <Dialog.Loading/>}
+                {dialogState && messageNotReport && <Text>No se encontraron reportes</Text>}
             </ScrollView>
           </View>
         </View>
@@ -64,8 +144,9 @@ export default function HistoryScreen({navigation}){
 }
 const description = "Las sillas del parke ...";
 
-const states = ["Aprobado", "En proceso", "Rechazadas"];
-
+const states = ["Eliminado", "En proceso", "Aprobado"];
+const typeReport = ["aseo urbano", "vias publicas", "alumbrado publico", "alcantarillado", "areas verdes"];
+/*
 const histories = [
     {
         title:"historias sin sentido",
@@ -103,7 +184,7 @@ const histories = [
         fecha:"05/02/2023",
         state:states[0]
     }
-];
+];*/
 
 const styles = new StyleSheet.create({
     screenComplete: {
