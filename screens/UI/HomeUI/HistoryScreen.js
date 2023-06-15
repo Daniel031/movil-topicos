@@ -65,7 +65,8 @@ export default function HistoryScreen({navigation}){
     const charginReports = () => {
         const reports = [];
         if (histories){
-            for (let i = 0; i < histories.length; i++) { 
+            for (let i = histories.length-1; i>=0; i--) { 
+                if ((histories[i].tipo_denuncia == selectType) || selectType == 0)
                 reports.push(
                     <HistoryStateComponent key={i} keyVal={`${i}`} onPress={()=>{navigation.navigate('ShowReport',histories[i])}} style={styles.history} title={histories[i].titulo} description = {histories[i].descripcion} source={{uri:histories[i].imagen1}} state={states.at(histories[i].estado)} date={histories[i].fecha} />
                 )
@@ -78,6 +79,7 @@ export default function HistoryScreen({navigation}){
         const reports = [];
         if (histories){
             for (let i = 0; i < histories.length; i++) { 
+                if (histories[i].tipo_denuncia == selectType+1 || selectType == 0)
                 reports.push(
                     <HistoryStateComponent key={i} keyVal={`${i}`} onPress={()=>{navigation.navigate('ShowReport',histories[i])}} style={styles.history} title={histories[i].titulo} description = {histories[i].descripcion} source={{uri:histories[i].imagen1}} state={states.at(histories[i].estado)} date={histories[i].fecha} />
                 )
@@ -87,6 +89,7 @@ export default function HistoryScreen({navigation}){
     };
 
     let items = [];
+    items.push(<Picker.Item key={0} style={styles.pickerItem} label={"todos"} value={0}/>);
     for (let i = 0; i < typeReport.length; i++) {
         items.push(
           <Picker.Item key={typeReport[i]} style={styles.pickerItem} label={typeReport[i]} value={i+1}/>
@@ -95,23 +98,7 @@ export default function HistoryScreen({navigation}){
     }
 
     const aplyingFilters = () => {
-        setDialogState(false);
-        ReportService.getReportsFilter(selectDate,selectType,isRecived?2:1).then((value) => {
-            if (value){
-                if (value.res) {
-                    setHistories(value.datos);
-                    charginReportsFilter();
-                } else {
-                    setmessageNotReport(true);
-                }
-                
-            }
-        }).catch(() => {
-            setmessageNotReport(true);
-            
-        }).finally(() => {
-            setDialogState(true);
-        });
+        
     }
     
     return (
@@ -121,13 +108,13 @@ export default function HistoryScreen({navigation}){
           </View>
           <View style={styles.picker}>
             <View style={styles.pickerBoxes}>
-            <Picker style={styles.pickerStyle} selectedValue={selectDate}   onValueChange={(itemValue, itemIndex) =>setSelectDate(itemValue)}>
+            <Picker style={styles.pickerStyle} selectedValue={selectDate}   onValueChange={(itemValue, itemIndex) =>{setSelectDate(itemValue); }}>
                 <Picker.Item style={styles.pickerItem} label='Hoy' value={0}/>
                 <Picker.Item style={styles.pickerItem} label='Ultima semana' value={1} />
             </Picker> 
             </View>
             <View style={styles.pickerBoxes} >
-            <Picker style={styles.pickerStyle} selectedValue={selectType}   onValueChange={(itemValue, itemIndex) =>setSelectType(itemValue)}>
+            <Picker style={styles.pickerStyle} selectedValue={selectType}   onValueChange={(itemValue, itemIndex) =>{setSelectType(itemValue); obtainReports();}}>
                 {items}
             </Picker> 
             </View>

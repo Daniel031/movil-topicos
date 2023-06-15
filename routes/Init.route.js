@@ -13,7 +13,7 @@ const userAuthenticated = ()=>{
 export default function InitRoute() {
   return (
       <Stack.Navigator>
-                <Stack.Screen name="NoLoguedado" options={{headerShown:false}} component={AuthenticationRoute} />
+         <Stack.Screen name="NoLoguedado" options={{headerShown:false}} component={AuthenticationRoute} />
          <Stack.Screen name="Logueado" options={{headerShown:false}} component={UserMenu} />
     
       </Stack.Navigator> 

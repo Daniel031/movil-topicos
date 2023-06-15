@@ -16,19 +16,13 @@ export default function ReportCreateScreen({route,navigation}){
     const [ dialogState, setDialogState ] = useState(false);
 
     useEffect(() => {
-        (async () => {
-          
-          let { status } = await Location.requestForegroundPermissionsAsync();
-          if (status !== 'granted') {
-            setErrorMsg('Permission to access location was denied');
-            return;
-          }
-    
-          let location = await Location.getCurrentPositionAsync({});
-          setLongitude(location.coords.longitude);
-          setLatitude(location.coords.latitude);
-        })();
-      }, []);
+        obtainUbication().then(()=>{
+
+        }).catch( (error)=>{
+
+        }).finally(()=>{
+        })
+      }, [photosGallery]);
 
     const onChageValueReport = (newValue) => {
         setCodeTypeReport(newValue);
@@ -47,6 +41,17 @@ export default function ReportCreateScreen({route,navigation}){
         setLatitude(alatitude);
     }
 
+    const obtainUbication = async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+          return;
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        setLongitude(location.coords.longitude);
+        setLatitude(location.coords.latitude);
+      }
+
     const sendReport = () => {
         if(isDisabled()){
             ToastAndroid.show('Llene los campos primero', ToastAndroid.SHORT);
@@ -63,7 +68,7 @@ export default function ReportCreateScreen({route,navigation}){
                     ToastAndroid.show('Se creo satisfactoriamente la denuncia',ToastAndroid.SHORT);
                     navigation.navigate('Historial');
                 }else{
-                    ToastAndroid.show('La imagen no esta acorde a lo enviado',ToastAndroid.SHORT);
+                    ToastAndroid.show(`${value.mensaje}`,ToastAndroid.SHORT);
                 }
             }
             
