@@ -6,20 +6,9 @@ import { Alert } from 'react-native';
     return emailRegex.test(email);
   };
 
-  const validatePassword = () => {
-    // Expresión regular para validar la contraseña
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-    if (passwordRegex.test(password)) {
-      // La contraseña es válida
-      Alert.alert('Contraseña válida');
-    } else {
-      // La contraseña es inválida
-      Alert.alert(
-        'Contraseña inválida',
-        'La contraseña debe contener al menos 8 caracteres, incluyendo una letra mayúscula, una letra minúscula, un carácter especial y un número.'
-      );
-    }
+  const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+    return passwordRegex.test(password)
   };
 
   const isEmptyText = (value) => {

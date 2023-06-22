@@ -1,25 +1,72 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { View ,StyleSheet, Text, TextInput } from 'react-native';
+import { View ,StyleSheet, Text, TextInput, ToastAndroid } from 'react-native';
 import CellComponent from '../components/Cell.Component';
 import ButtonComponent from '../components/Button.component';
+import { useIsFocused } from '@react-navigation/native';
+import { useEffect } from 'react';
+import Authentication from '../../services/Authentication';
 
-export default function EmailConfirmScreen({navigation}){
+export default function EmailConfirmScreen({route,navigation}){
     const [cell1,setCell1] = useState('');
     const [cell2,setCell2] = useState('');
     const [cell3,setCell3] = useState('');
     const [cell4,setCell4] = useState('');
     const [cell5,setCell5] = useState('');
     const [cell6,setCell6] = useState('');
-    
+    const [mesagge, setMessage] = useState('Esperando . . .');
+    const isFocused = useIsFocused();
+    const { email } = route.params;
+
+    //Se envio un codigo a tu correo electronico {email}, revisalo
+
+    useEffect(() => {
+        sendEmail();
+    },[isFocused]);
+
+    const sendEmail = () => {
+        Authentication.verifyEmail(email).then((value) => {
+            if (value) {
+                if (value.res){
+                    setMessage(`${value.mensaje}`);
+                } else { 
+                    ToastAndroid.show(`${value.mensaje}`,ToastAndroid.SHORT);
+                    setMessage(`Ocurrio un error intentelo mas tarde`);
+                }
+            }else{
+                ToastAndroid.show('Ocurrio un error, reintentenlo mas tarde',ToastAndroid.SHORT);
+            }
+        }).catch((error)=> {
+            ToastAndroid.show(`${error}`,ToastAndroid.SHORT);
+        });        
+    }  
+
     const verifyEmail = () => {
         const code = `${cell1}${cell2}${cell3}${cell4}${cell5}${cell6}`
+        if (code.length === 6){
+        Authentication.verifyCodeEmail(email, code).then((value) => {
+            if (value) {
+                if (value.res){
+                    ToastAndroid.show(`${value.mensaje}`,ToastAndroid.SHORT);
+                    navigation.navigate('HomeUser');
+                }else{
+                    ToastAndroid.show(`${value.mensaje}`,ToastAndroid.SHORT);
+                }
+            }else{ 
+                ToastAndroid.show('Ocurrio un error, reintentenlo mas tarde',ToastAndroid.SHORT);
+            }
+        }).catch(() => {
+
+        });
+    }else{
+        ToastAndroid.show('LLene todos los espacios',ToastAndroid.SHORT);
+    }
     };
 
     return (
         <View style={styles.mainContainer}>
             <View>
-                <Text style={styles.message}>Se envio un codigo a tu correo electronico, revisalo</Text>
+                <Text style={styles.message}>{mesagge}</Text>
             </View>
             <View style={styles.codeContainer}>
                  <CellComponent 
@@ -60,7 +107,7 @@ export default function EmailConfirmScreen({navigation}){
                   />
             </View>
             <View>
-               <ButtonComponent onPress={verifyEmail()} style={{width:'100%'}} fontColor="white" text="Confirmar codigo de verificacion"/>
+               <ButtonComponent onPress={verifyEmail} style={{width:'100%'}} fontColor="white" text="Confirmar codigo de verificacion"/>
             </View>
         </View>
     );

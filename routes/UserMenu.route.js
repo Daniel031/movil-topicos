@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import UserProfile from '../screens/UI/HomeUI/UserProfile';
-import HistoryScreen from '../screens/UI/HomeUI/HistoryScreen';
 import InitScreen from '../screens/UI/HomeUI/InitScreen';
 import Report from './Report.route';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ReportCreateScreen from '../screens/UI/HomeUI/Reports/ReportCreateScreen';
-import ReportShowScreen from '../screens/UI/HomeUI/Reports/ReportShowScreen';
-import ReportEditScreen from '../screens/UI/HomeUI/Reports/ReportEditScreen';
+
 
 
 const Tab = createBottomTabNavigator();

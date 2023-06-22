@@ -36,15 +36,42 @@ const beforeSignUpImage = (codeCI, photoUri) => {
   }
   
 
-const signUp = () => {
-
- 
+const signUp = (email, name, password) => {
+  const endPoint = 'users';
+  const url = `${API_URL}/${endPoint}`;
+  const objectData = { name ,email, password };
+  const response = HttpClient.HttpQuery(objectData,url,'POST');
+  return response;
 };
+
+const emailNoVerified = (email) => {
+  const endPoint = 'users-emailNoRegistrado';
+  const url = `${API_URL}/${endPoint}`;
+  const objectData = { email };
+  const response = HttpClient.HttpQuery(objectData,url,'POST');
+  return response;
+};
+
+const verifyEmail = (email) => {
+  const endPoint = 'users-emailVerify';
+  const url = `${API_URL}/${endPoint}`;
+  const objectData = { email };
+  const response = HttpClient.HttpQuery(objectData,url,'POST');
+  return response;
+}
 
 const logout = () => {
 
 
 };
+
+const verifyCodeEmail = (email,codigo_verificacion) => {
+  const endPoint = 'users-codigoVerificacionEmail';
+  const url = `${API_URL}/${endPoint}`;
+  const objectData = { email, codigo_verificacion };
+  const response = HttpClient.HttpQuery(objectData,url,'POST');
+  return response;
+}
 
 const isSigned = () => {
 
@@ -65,7 +92,10 @@ const Authentication = {
     login,
     signUp,
     isSigned,
-    beforeSignUpImage
+    beforeSignUpImage,
+    emailNoVerified,
+    verifyEmail,
+    verifyCodeEmail
 };
 
 

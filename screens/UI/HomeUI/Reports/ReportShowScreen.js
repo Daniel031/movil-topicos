@@ -2,7 +2,6 @@ import * as React from 'react';
 import { View, Text, Image, StyleSheet, ToastAndroid} from 'react-native';
 import { Button, Dialog } from '@rneui/base';
 import { useState } from 'react';
-import Report from '../../../../routes/Report.route';
 import ReportService from '../../../../services/Report';
 export default function ReportShowScreen({route,navigation}){
 // const { a, b, c, d } = route.params;
@@ -25,15 +24,15 @@ export default function ReportShowScreen({route,navigation}){
                     if (value.res){
                         bandera = true;
                         ToastAndroid.show('Se elimino de manera satisfactoria',ToastAndroid.SHORT);
-                        navigation.navigate('HistoryScreen');
+                        navigation.goBack();
                     }
                 }
                 if (!bandera)
-                    ToastAndroid.show('No se pudo eliminar la denuncia',ToastAndroid.SHORT);
+                    ToastAndroid.show(`${JSON.stringify(value)}`,ToastAndroid.SHORT);
             }
         ).catch(
             (error) =>{
-                ToastAndroid.show('No se pudo eliminar la denuncia',ToastAndroid.SHORT);
+                ToastAndroid.show(`No se pudo eliminar la denuncia ${error}`,ToastAndroid.SHORT);
             }
         ).finally(
             ()=>{

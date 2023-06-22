@@ -55,7 +55,8 @@ export default function SignUpScreenCamera({navigation}){
 
     const sendRequest = () => {
       setDialogState(true);
-      Authentication.beforeSignUpImage(codeCI,photoUri).then(res => {
+      const alterUri = 'https://res.cloudinary.com/dirau81x6/image/upload/v1685390870/R_oucxhh.jpg';
+      Authentication.beforeSignUpImage(codeCI,alterUri).then(res => {
         if (res.res){
           navigation.navigate('RegisterData',res.datos);
         }else{

@@ -43,6 +43,24 @@ export default function LoginScreen({navigation}){
         }
     };
 
+    const onPressVerify = () => {
+        Authentication.emailNoVerified(inputEmail).then((value) => {
+            if (value) {
+                if (value.res) {
+                    ToastAndroid.show(`${value.mensaje}`,ToastAndroid.SHORT);
+                    const datos = { email: inputEmail };
+                    navigation.navigate('EmailConfirm',datos);
+                }else {
+                    onPress();
+                }
+            } else {
+                ToastAndroid.show(`Ocurrio un error intentelo mas tarde`,ToastAndroid.SHORT);
+            }
+        }).catch((error)=> {
+            ToastAndroid.show(`${error}}`,ToastAndroid.SHORT);
+        });
+    }
+
     return (
         <View style={styles.mainContainer}>
             <View>
@@ -76,7 +94,7 @@ export default function LoginScreen({navigation}){
                             <Text style={{textAlign:'center', color:'red'}}>Correo o contraseña incorrectos</Text>
                           </View>
                 }
-                <ButtonComponent onPress={onPress} fontColor="white" text="Iniciar Sesion"/>
+                <ButtonComponent onPress={onPressVerify} fontColor="white" text="Iniciar Sesion"/>
                 <View style={styles.loginLinkContainer}>
                     <Text style={styles.textContainer} >No tienes una cuenta?,</Text>
                     <HiperLinkComponent onPress={()=>{navigation.navigate("Registrate")}} textLink=" registrate"/>

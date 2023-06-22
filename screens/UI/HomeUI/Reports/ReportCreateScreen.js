@@ -16,11 +16,13 @@ export default function ReportCreateScreen({route,navigation}){
     const [ dialogState, setDialogState ] = useState(false);
 
     useEffect(() => {
+        ToastAndroid.show(`${longitude} , ${latitude}`,ToastAndroid.SHORT);
         obtainUbication().then(()=>{
 
         }).catch( (error)=>{
 
         }).finally(()=>{
+            ToastAndroid.show(`${longitude} , ${latitude}`,ToastAndroid.SHORT);
         })
       }, [photosGallery]);
 
@@ -70,6 +72,8 @@ export default function ReportCreateScreen({route,navigation}){
                 }else{
                     ToastAndroid.show(`${value.mensaje}`,ToastAndroid.SHORT);
                 }
+            }else{
+                ToastAndroid.show(`${JSON.stringify(value)}`,ToastAndroid.SHORT);
             }
             
             

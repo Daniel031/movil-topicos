@@ -1,4 +1,4 @@
-import { Alert } from "react-native";
+import { Alert, ToastAndroid } from "react-native";
 import axios from "axios";
 
 const HttpQuery = async (objectInput,url, method ) => {
@@ -19,11 +19,11 @@ const HttpQuery = async (objectInput,url, method ) => {
       if (response.ok) {
         json = responseData; 
       } else {
-       // Alert.alert('Error', 'La solicitud no pudo ser completada');
+       json = {res: false, mess:JSON.stringify(response.status)}
       }
     } catch (error) {
       json = {res: false, mess:JSON.stringify(error)}
-    //  Alert.alert('Error', `error : ${error}`);
+      
     }finally{
       return json;
     }
@@ -101,7 +101,7 @@ const UploadPhoto = async (formData,url,method) => {
       json = {res:false,mess:response.status};
     }
   } catch (error) {
- //   Alert.alert('Error', `La solicitud no pudo ser completada ${error}`);
+    Alert.alert('Error', `La solicitud no pudo ser completada ${error}`);
   }finally{
     return json;
   }
