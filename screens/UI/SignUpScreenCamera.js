@@ -55,9 +55,9 @@ export default function SignUpScreenCamera({navigation}){
 
     const sendRequest = () => {
       setDialogState(true);
-      const alterUri = 'https://res.cloudinary.com/dirau81x6/image/upload/v1685390870/R_oucxhh.jpg';
+      const alterUri = photoUri;
       Authentication.beforeSignUpImage(codeCI,alterUri).then(res => {
-        if (res.res){
+        if (res.res && res.datos){
           navigation.navigate('RegisterData',res.datos);
         }else{
           Alert.alert('Usuario no encontrado',`No se encontro en la base de datos ${JSON.stringify(res)}`);

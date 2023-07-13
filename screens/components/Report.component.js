@@ -14,7 +14,7 @@ const ReportComponent = props => {
   if (props.typeReport)
 	for(let i = 0; i < props.typeReport.length; i++){
 		payments.push(
-            <Picker.Item key={i} label={props.typeReport[i]} value={i+1}/>
+            <Picker.Item key={i} label={props.typeReport[i].nombre} value={props.typeReport[i].id}/>
 		);
 	}
 

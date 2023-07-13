@@ -9,7 +9,6 @@ import { Dialog } from '@rneui/base';
 import { useEffect } from 'react';
 import ReportService from '../../../services/Report';
 import { useIsFocused } from '@react-navigation/native';
-import { useFocusEffect } from '@react-navigation/native';
 
 export default function HistoryScreen({navigation}){
 
@@ -21,19 +20,19 @@ export default function HistoryScreen({navigation}){
     const [ selectDate, setSelectDate ] = useState(0);
     const [ selectType, setSelectType ] = useState(0);
     const [ dialogState, setDialogState ] = useState(false);
-    const [ messageNotReport, setmessageNotReport ] = useState(false);
+    const [ messageNotReport, setmessageNotReport ] = useState(false);  
     const [ reportse , setReports] = useState([]);
     const [ histories, setHistories ] = useState([]);
 
     useEffect(() =>{
         if (isFocused){
+            setDialogState(false);
+            setmessageNotReport(false);
             obtainReports();
         }
+
     },[isFocused]);
 
-    useFocusEffect(() => {
-     
-    });
 
     const obtainReports = ()=>{
         setDialogState(false);
@@ -49,7 +48,6 @@ export default function HistoryScreen({navigation}){
             }
         }).catch(() => {
             setmessageNotReport(true);
-            
         }).finally(() => {
             setDialogState(true);
         });

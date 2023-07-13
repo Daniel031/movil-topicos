@@ -1,6 +1,7 @@
 import { API_URL } from '@env';
 import HttpClient from './HttpClient';
 import StorageValue from './Storage';
+import { ToastAndroid } from 'react-native';
 
 const saveReport = async (titulo,descripcion,latitud,longitud,imagenes,tipo_denuncia) => {
     const endPoint = 'users-denunciar';
@@ -90,11 +91,19 @@ const getReportsFilter = async (tiempo,tipo_denuncia,estado) => {
   return response;
 } 
 
+const getTypeReports = async () => {
+  const url = `${API_URL}/tipos-denuncias`;
+  const element = {};
+  const response = HttpClient.HttpQueryGet(element, url, 'GET');
+  return response;
+}
+
 const ReportService = {
     saveReport,
     getReports,
     getReportsFilter,
-    destroyReport
+    destroyReport,
+    getTypeReports
 };
  
 export default ReportService;

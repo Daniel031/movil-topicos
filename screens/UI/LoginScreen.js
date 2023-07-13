@@ -26,6 +26,7 @@ export default function LoginScreen({navigation}){
                (response)=>{
                 stateError = !response.res;
                 if (!stateError){
+                    //ToastAndroid.show(`${response.mensaje}`,ToastAndroid.SHORT);
                     navigation.navigate('HomeUser');
                 }else{
                     if(response)

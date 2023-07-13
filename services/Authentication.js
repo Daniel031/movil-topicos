@@ -1,6 +1,7 @@
 import { API_URL } from '@env';
 import HttpClient from './HttpClient';
 import StorageValue from './Storage';
+import { ToastAndroid } from 'react-native';
 
 const login = (email,password,session) => {
     const endPoint ='users-login';
@@ -8,20 +9,29 @@ const login = (email,password,session) => {
     const objectData = { email, password };
     const response = HttpClient.HttpQuery(objectData,url,'POST');
     if (response){
-            response.then(
-                (value) => {
-                  if (session){
-                    saveSession(value.token);
-                  } 
-                    saveEmail(email);
-                }
-            );
+      saveEmailSession( session,response, email);
     }
     return response;
 };
 
+const saveEmailSession = (session, res, email) => {
+  res.then(
+    (value) => {
+      if (session){
+        saveSession(value.token);
+      } 
+        saveEmail(email);
+    }
+ );
+};
+
+const saveEmailSessionSignUp = (res, email) => {
+  const session = false;
+  saveEmailSession(session,res, email);
+}
 
 const beforeSignUpImage = (codeCI, photoUri) => {
+  ToastAndroid.show(` esta es la uri ${photoUri}`,ToastAndroid.SHORT);
     const endPoint = 'users-comprobacion';
     const url = `${API_URL}/${endPoint}`;
     const formData = new FormData();
@@ -41,6 +51,7 @@ const signUp = (email, name, password) => {
   const url = `${API_URL}/${endPoint}`;
   const objectData = { name ,email, password };
   const response = HttpClient.HttpQuery(objectData,url,'POST');
+  saveEmailSessionSignUp(response, email);
   return response;
 };
 

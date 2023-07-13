@@ -70,7 +70,6 @@ export default function SignUpDataScreen({route,navigation}){
     };
 
     const verifyPassword = (newText) => {
-        setpasswordEquals(newText === inputPasswordConfirm);
         setValidatePassword(Validations.validatePassword(inputPassword));
     }
 

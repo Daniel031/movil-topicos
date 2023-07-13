@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import * as Location from 'expo-location';
 import ReportService from '../../../../services/Report';
 import { Dialog } from '@rneui/base';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function ReportCreateScreen({route,navigation}){
     const [codeTypeReport,setCodeTypeReport] = useState(0);
@@ -14,9 +15,18 @@ export default function ReportCreateScreen({route,navigation}){
     const [ longitude, setLongitude ] = useState(0);
     const [ latitude, setLatitude ] = useState(0);
     const [ dialogState, setDialogState ] = useState(false);
+    const [typeReport, setTypeReport] = useState([]); 
+    const isFocused = useIsFocused();
 
     useEffect(() => {
-        ToastAndroid.show(`${longitude} , ${latitude}`,ToastAndroid.SHORT);
+        ReportService.getTypeReports().then((value) => {
+            if (value) {
+                if (value.res) {
+                    setTypeReport(value.datos?[...value.datos]:[]);
+                }
+            }
+        });
+        
         obtainUbication().then(()=>{
 
         }).catch( (error)=>{
@@ -24,7 +34,7 @@ export default function ReportCreateScreen({route,navigation}){
         }).finally(()=>{
             ToastAndroid.show(`${longitude} , ${latitude}`,ToastAndroid.SHORT);
         })
-      }, [photosGallery]);
+      }, [isFocused,photosGallery]);
 
     const onChageValueReport = (newValue) => {
         setCodeTypeReport(newValue);
@@ -52,7 +62,7 @@ export default function ReportCreateScreen({route,navigation}){
         let location = await Location.getCurrentPositionAsync({});
         setLongitude(location.coords.longitude);
         setLatitude(location.coords.latitude);
-      }
+    }
 
     const sendReport = () => {
         if(isDisabled()){
@@ -119,5 +129,3 @@ export default function ReportCreateScreen({route,navigation}){
         </View>
     );
 }
-
-const typeReport = ["aseo urbano", "vias publicas", "alumbrado publico", "alcantarillado", "areas verdes"];
