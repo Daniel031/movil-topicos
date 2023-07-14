@@ -28,9 +28,8 @@ export default function ReportCreateScreen({route,navigation}){
         });
         
         obtainUbication().then(()=>{
-
         }).catch( (error)=>{
-
+            console.log(error)
         }).finally(()=>{
             ToastAndroid.show(`${longitude} , ${latitude}`,ToastAndroid.SHORT);
         })
@@ -62,6 +61,7 @@ export default function ReportCreateScreen({route,navigation}){
         let location = await Location.getCurrentPositionAsync({});
         setLongitude(location.coords.longitude);
         setLatitude(location.coords.latitude);
+        ToastAndroid.show(`${latitude} ${longitude}`,ToastAndroid.SHORT);
     }
 
     const sendReport = () => {

@@ -19,7 +19,7 @@ const HttpQuery = async (objectInput,url, method ) => {
       if (response.ok) {
         json = responseData; 
       } else {
-       json = {res: false, mess:JSON.stringify(response.status)}
+       json = {res: false, mess:JSON.stringify(response.status), body: JSON.stringify(response)}
       }
     } catch (error) {
       json = {res: false, mess:JSON.stringify(error)}

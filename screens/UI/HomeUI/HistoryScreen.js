@@ -103,6 +103,7 @@ export default function HistoryScreen({navigation}){
         <View style={ styles.screenComplete }>
           <View style={styles.filterOptionsButton}>
             <ButtonSelectComponent onPress={()=>{ obtainReports() }} stateButton={isRecived} text="Actualizar" />
+            <ButtonSelectComponent onPress={()=>{ navigation.navigate('Nofications') }} stateButton={isRecived} text="Notificaciones" />
           </View>
           <View style={styles.picker}>
             <View style={styles.pickerBoxes}>
@@ -131,45 +132,6 @@ const description = "Las sillas del parke ...";
 
 const states = ["Eliminado", "En proceso", "Aprobado"];
 const typeReport = ["aseo urbano", "vias publicas", "alumbrado publico", "alcantarillado", "areas verdes"];
-/*
-const histories = [
-    {
-        title:"historias sin sentido",
-        description:"La nocion de la perdida es aquella que no se pier..",
-        fecha:"05/04/2023",
-        state:states[0]
-    },
-    {
-        title:"historias sin sentido",
-        description:"La nocion de la perdida es aquella que no se pier..",
-        fecha:"05/04/2023",
-        state:states[1]
-    },
-    {
-        title:"historias sin sentido",
-        description:"La nocion de la perdida es aquella que no se pier..",
-        fecha:"05/05/2023",
-        state:states[1]
-    },
-    {
-        title:"historias sin sentido",
-        description:"La nocion de la perdida es aquella que no se pier..",
-        fecha:"05/03/2023",
-        state:states[2]
-    },
-    {
-        title:"historias sin sentido",
-        description:"La nocion de la perdida es aquella que no se pier..",
-        fecha:"05/02/2023",
-        state:states[1]
-    },
-    {
-        title:"historias sin sentido",
-        description:"La nocion de la perdida es aquella que no se pier..",
-        fecha:"05/02/2023",
-        state:states[0]
-    }
-];*/
 
 const styles = new StyleSheet.create({
     screenComplete: {

@@ -30,7 +30,7 @@ export default function EmailConfirmScreen({route,navigation}){
                 if (value.res){
                     setMessage(`${value.mensaje}`);
                 } else { 
-                    ToastAndroid.show(`${value.mensaje}`,ToastAndroid.SHORT);
+                    ToastAndroid.show(`${JSON.stringify(value)}`,ToastAndroid.SHORT);
                     setMessage(`Ocurrio un error intentelo mas tarde`);
                 }
             }else{
